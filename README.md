@@ -13,3 +13,9 @@ In the project directory (/frontend), you can run:
 In the project directory (/backend), you can run:
 
 ### `./gradlew bootRun`
+
+# Getting Started with the backend
+
+## Requierements
+Gradle 8.8
+Java  17
