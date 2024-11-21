@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
-import FlightSearchForm from './components/FlightSearchForm';
-import FlightList from './components/FlightList';
+import React from 'react';
+import './App.css';
+import SearchForm from './components/SearchFlights/SearchFlights';
+import { Route, Routes,BrowserRouter } from 'react-router-dom';
+import Results from './components/Results/Results';
+import { FlightResultProvider } from './contexts/FlightResultsContext';
 
-const App: React.FC = () => {
-  const [flights, setFlights] = useState<any[]>([]);
-
+function App() {
   return (
-    <div>
-      <h1>Flight Search</h1>
-      <FlightSearchForm setFlights={setFlights} />
-      <FlightList flights={flights} />
-    </div>
+    <FlightResultProvider>
+          <BrowserRouter>
+              <Routes>
+                  <Route path='/' element={<SearchForm/>}></Route>
+                  <Route path='/results' element={<Results></Results>}></Route>
+              </Routes>
+        </BrowserRouter>
+
+    </FlightResultProvider>
+
+
   );
-};
+}
 
 export default App;
-

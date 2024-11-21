@@ -1,0 +1,82 @@
+/* Container Style */
+.formContainer {
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding: 20px; 
+    background-color: #f0f8ff; 
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar el formulario */
+}
+
+/* header */
+.formHeader {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.formTitle {
+    font-family: 'Arial', sans-serif;
+    color: #1890ff; /* Azul más oscuro */
+}
+
+/* Form color */
+.customForm .ant-form-item-label > label {
+    color: #0050b3; 
+}
+
+.customInput,
+.customSelect,
+.customDatePicker {
+    width: 400px;
+    border-radius: 6px;
+    border: 1px solid #91d5ff;
+}
+
+.customInput:focus,
+.customSelect:focus,
+.customDatePicker:focus {
+    border-color: #1890ff;
+    box-shadow: 0 0 5px #40a9ff;
+}
+
+/* Search button */
+.customButton {
+    background-color: #40a9ff;
+    border-color: #40a9ff;
+    color: white;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.customButton:hover {
+    background-color: #1890ff;
+    border-color: #1890ff;
+}
+
+/* Checkbox */
+.customCheckbox .ant-checkbox-inner {
+    border-color: #40a9ff;
+}
+
+.customCheckbox .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #40a9ff;
+    border-color: #40a9ff;
+}
+
+/* Spin loader */
+.loadingOverlay {
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.8);
+}
+/* optional return date */
+.helpText {
+    font-size: 12px;
+    color: #7a7a7a;
+    margin-top: 4px;
+    display: block;
+}
+ 
+.customForm .ant-form-item {
+    margin-bottom: 24px;
+}
