@@ -1,0 +1,51 @@
+/* Principal conntainerr*/
+.detailsContainer {
+    background-color: #f0f8ff;
+    padding: 20px;
+    width: 100%;
+    max-width: 80%;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 1000px;
+    overflow-y: auto; 
+    overflow-x: hidden; 
+}
+
+
+/* Header */
+.detailsHeader {
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Segment row */
+.segmentRow {
+    margin-bottom: 16px;
+}
+
+/* Segment card */
+.segmentCard {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #1890ff; 
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Vertical divisor */
+.verticalDivider {
+    height: auto;
+    margin: 0 20px;
+}
+/* Layover info */
+.layoverInfo {
+    margin: 8px 0;
+    padding: 8px;
+    background-color: #f5f5f5; 
+    border-left: 4px solid #1890ff; 
+    font-size: 14px;
+    border-radius: 4px; 
+}
+

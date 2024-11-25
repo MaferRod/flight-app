@@ -31,4 +31,13 @@ public class flightController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+    @GetMapping("/sort")
+    public ResponseEntity<?> sortFlightOffers(@RequestParam String type){
+        try{
+            List<JSONObject> response = searchService.sort(type);
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(response.toString());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

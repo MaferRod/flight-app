@@ -75,38 +75,74 @@ public class SearchService {
     }
 
     private JSONObject addAirportAndAirlinesCommonNames(String originalJson) throws IOException {
-        JSONObject jsonResponse =new JSONObject(originalJson);
+        JSONObject jsonResponse = new JSONObject(originalJson);
         JSONArray dataArray = jsonResponse.getJSONArray("data");
-
-        for(int i = 0; i < dataArray.length(); i++){
+    
+        for (int i = 0; i < dataArray.length(); i++) {
             JSONObject flightOffer = dataArray.getJSONObject(i);
-            JSONArray itineraries = flightOffer.getJSONArray("itineraries");
-            Duration totalDuration = Duration.ZERO;
-            for(int j = 0; j < itineraries.length(); j++){
-                JSONObject itinerary = itineraries.getJSONObject(j);
-                JSONArray segments = itinerary.getJSONArray("segments");
-                Duration duration = Duration.parse(itinerary.getString("duration"));
-                totalDuration  = totalDuration.plus(duration);
-                for(int k = 0; k < segments.length(); k++){
-                    JSONObject segment = segments.getJSONObject(k);
-
-                    String deptIATA = segment.getJSONObject("departure").getString("iataCode");
-                    String deptAirportName = airportService.airportNameSearchByKeyword(deptIATA);
-                    segment.getJSONObject("departure").put("airportCommonName",deptAirportName);
-
-                    String arrIATA = segment.getJSONObject("arrival").getString("iataCode");
-                    String arrAirportName = airportService.airportNameSearchByKeyword(arrIATA);
-                    segment.getJSONObject("arrival").put("airportCommonName",arrAirportName);
-
-                    String carrierCode = segment.getString("carrierCode");
-                    String airlineName = airlineService.airlineName(carrierCode);
-                    segment.put("airlineCommonName",airlineName);
-                }
-            }
-            flightOffer.put("totalDuration",totalDuration.toString());
-            flightOffer.put("totalPrice",flightOffer.getJSONObject("price").getString("total"));
+            processFlightOffer(flightOffer);
         }
-
+    
         return jsonResponse;
+    }
+    
+    // Flightoffer logic
+    private void processFlightOffer(JSONObject flightOffer) throws IOException {
+        JSONArray itineraries = flightOffer.getJSONArray("itineraries");
+        Duration totalDuration = Duration.ZERO;
+    
+        for (int j = 0; j < itineraries.length(); j++) {
+            JSONObject itinerary = itineraries.getJSONObject(j);
+            totalDuration = totalDuration.plus(processItinerary(itinerary));
+        }
+    
+        flightOffer.put("totalDuration", totalDuration.toString());
+        flightOffer.put("totalPrice", flightOffer.getJSONObject("price").getString("total"));
+    }
+    
+    // Itinerary and duration
+    private Duration processItinerary(JSONObject itinerary) throws IOException {
+        JSONArray segments = itinerary.getJSONArray("segments");
+        Duration duration = Duration.parse(itinerary.getString("duration"));
+    
+        for (int k = 0; k < segments.length(); k++) {
+            JSONObject segment = segments.getJSONObject(k);
+            processSegment(segment);
+        }
+    
+        return duration;
+    }
+    
+    // Process the keyword to find an airport
+    private void processSegment(JSONObject segment) throws IOException {
+        JSONObject departure = segment.getJSONObject("departure");
+        departure.put("airportCommonName", getAirportCommonName(departure.getString("iataCode")));
+    
+        JSONObject arrival = segment.getJSONObject("arrival");
+        arrival.put("airportCommonName", getAirportCommonName(arrival.getString("iataCode")));
+    
+        segment.put("airlineCommonName", getAirlineCommonName(segment.getString("carrierCode")));
+    }
+    
+    // Search Airport by IATA
+    private String getAirportCommonName(String iataCode) throws IOException {
+        return airportService.airportNameSearchByKeyword(iataCode);
+    }
+    
+    // Search Airline
+    private String getAirlineCommonName(String carrierCode) throws IOException {
+        return airlineService.airlineName(carrierCode);
+    } 
+
+    public List<JSONObject> sort(String mode){
+
+        switch (mode) {
+            case "price" -> SortFlights.sort(this.flightOffers, "totalPrice", null);
+            case "duration" -> SortFlights.sort(this.flightOffers, "totalDuration", null);
+            case "duration-price" -> SortFlights.sort(this.flightOffers, "totalDuration", "totalPrice");
+            case "price-duration" -> SortFlights.sort(this.flightOffers, "totalPrice", "totalDuration");
+        };
+
+        return this.flightOffers;
     }
 }

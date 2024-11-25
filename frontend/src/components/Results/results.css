@@ -1,45 +1,31 @@
 /* Results Container */
 .resultsContainer {
-    background-color: #e6f7ff; /* Fondo azul claro */
+    background-color: #e6f7ff; 
     padding: 20px;
-    max-width: 800px; /* Ancho máximo */
-    margin: 0 auto; /* Centrado */
+    max-width: 90%; 
+    margin: 0 auto; 
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
-}
-
-/* Header */
-.resultsHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
 /* List Container */
 .resultsListContainer {
     max-height: 70vh;
     overflow-y: auto;
+    width: 100%; 
 }
 
 /* Results List */
 .resultsList {
-    width: 800px;
+    width: 100%; 
     padding: 0;
 }
-
-/* Item list */
-.clickableItem {
-    cursor: pointer;
-    transition: background-color 0.3s;
-    border-bottom: 1px solid #d9d9d9;
-    padding: 16px;
-}
-
 
 /* Itinerary */
 .itinerarySection {
     margin-bottom: 16px;
+    width: 100%; 
+    max-width: 50%;
 }
 
 /* Details card */
@@ -48,18 +34,31 @@
     border-radius: 6px;
     padding: 16px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 90%; 
 }
 
 /* Price */
 .offerSummary {
     margin-top: 16px;
     text-align: right;
-    margin-right: 10px;
-    width: 400px;
+    margin-left: auto; 
+    width: 50%; 
+    max-width: 50%;
 }
 
 /* Button "Load more" */
 .loadMoreContainer {
     text-align: center;
     margin-top: 20px;
+}
+
+/* Layover Info */
+.layoverInfo {
+    margin: 10px 0;
+    padding: 5px;
+    background-color: #f5f5f5; 
+    border-left: 4px solid #1890ff; 
+    font-size: 14px;
+    width: 100%; 
 }

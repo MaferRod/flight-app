@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
-import { List, Card, Row, Col, Typography, Divider, Button } from "antd";
+import { List, Card, Row, Col, Typography, Divider, Button, RadioChangeEvent, Radio } from "antd";
 import FlightResultsContext from "../../contexts/FlightResultsContext";
 import { useNavigate } from "react-router-dom";
 import "./results.css";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 dayjs.extend(duration);
 
@@ -23,10 +24,26 @@ const Results: React.FC = () => {
 
     const handleClick = (flightOffer: any) => {
         setSelectedFlight(flightOffer);
-        /*navigate to details*/
+        navigate('/details');
+    };
+
+    const onChange = async (e: RadioChangeEvent) => {
+        try {
+            const response = await axios.get('http://localhost:8080/flights/sort', {
+                params: {
+                    type: e.target.value
+                }
+            }
+            );
+            const data = response.data;
+            setFlightResults(data);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
+
         <div className="resultsContainer">
             <Row className="resultsHeader" align="middle">
                 <Col span={24}>
@@ -36,6 +53,15 @@ const Results: React.FC = () => {
                     <Button onClick={() => navigate("/")} icon={<ArrowLeftOutlined />}>
                         Back
                     </Button>
+                </Col>
+                <Col offset={8}>
+                    <Title level={5}>Sort by:</Title>
+                    <Radio.Group onChange={onChange} defaultValue={'price'}>
+                        <Radio.Button value={"price"}>Price</Radio.Button>
+                        <Radio.Button value={"duration"}>Duration</Radio.Button>
+                        <Radio.Button value={"price-duration"}>Price-Duration</Radio.Button>
+                        <Radio.Button value={"duration-price"}>Duration-price</Radio.Button>
+                    </Radio.Group>
                 </Col>
             </Row>
             <div className="resultsListContainer">
@@ -54,58 +80,82 @@ const Results: React.FC = () => {
                                         <Title level={4}>
                                             {itineraryIndex === 0 ? "Departure" : "Return"}
                                         </Title>
+
                                         {itinerary.segments.map((segment: any, segmentIndex: any) => (
-                                            <Card className="segmentCard" key={segmentIndex}>
-                                                <Row>
-                                                    <Col span={12}>
-                                                        <Text strong>Dept. date:</Text>{" "}
-                                                        {dayjs(segment.departure.at).format(
-                                                            "YYYY-MM-DD HH:mm"
-                                                        )}
-                                                    </Col>
-                                                    <Col span={12}>
-                                                        <Text strong>Arr. date:</Text>{" "}
-                                                        {dayjs(segment.arrival.at).format(
-                                                            "YYYY-MM-DD HH:mm"
-                                                        )}
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col span={12}>
-                                                        <Text strong>Dept. airport:</Text>{" "}
-                                                        {segment.departure.airportCommonName} (
-                                                        {segment.departure.iataCode})
-                                                    </Col>
-                                                    <Col span={12}>
-                                                        <Text strong>Arr. airport:</Text>{" "}
-                                                        {segment.arrival.airportCommonName} (
-                                                        {segment.arrival.iataCode})
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col>
-                                                        <Text strong>Duration:</Text>{" "}
-                                                        {dayjs
-                                                            .duration(segment.duration)
-                                                            .format("HH[h] mm[m]")}
-                                                    </Col>
-                                                </Row>
-                                            </Card>
+                                            <React.Fragment key={segmentIndex}>
+                                                <Card className="segmentCard">
+                                                    <Row>
+                                                        <Col span={12}>
+                                                            <Text strong>Departure:</Text>{" "}
+                                                            {dayjs(segment.departure.at).format("YYYY-MM-DD HH:mm")}
+                                                        </Col>
+                                                        <Col span={12}>
+                                                            <Text strong>Arrival:</Text>{" "}
+                                                            {dayjs(segment.arrival.at).format("YYYY-MM-DD HH:mm")}
+                                                        </Col>
+                                                    </Row>
+                                                    <Row>
+                                                        <Col span={12}>
+                                                            <Text strong>Departure Airport:</Text>{" "}
+                                                            {segment.departure.airportCommonName} ({segment.departure.iataCode})
+                                                        </Col>
+                                                        <Col span={12}>
+                                                            <Text strong>Arrival Airport:</Text>{" "}
+                                                            {segment.arrival.airportCommonName} ({segment.arrival.iataCode})
+                                                        </Col>
+                                                    </Row>
+                                                    <Row>
+                                                        <Col>
+                                                            <Text strong>Flight Duration:</Text>{" "}
+                                                            {(() => {
+                                                                const flightDuration = dayjs.duration(segment.duration).asMinutes();
+                                                                const hours = Math.floor(flightDuration / 60);
+                                                                const minutes = flightDuration % 60;
+                                                                return `${hours}h ${minutes}m`;
+                                                            })()}
+                                                        </Col>
+                                                    </Row>
+                                                </Card>
+                                                {segmentIndex < itinerary.segments.length - 1 && (
+                                                    <div className="layoverInfo">
+                                                        <Text strong>Layover Time:</Text>{" "}
+                                                        {(() => {
+                                                            const currentArrival = dayjs(segment.arrival.at);
+                                                            const nextDeparture = dayjs(
+                                                                itinerary.segments[segmentIndex + 1].departure.at
+                                                            );
+                                                            const layoverMinutes = nextDeparture.diff(currentArrival, "minutes");
+                                                            const hours = Math.floor(layoverMinutes / 60);
+                                                            const minutes = layoverMinutes % 60;
+                                                            return `${hours}h ${minutes}m`;
+                                                        })()}
+                                                    </div>
+                                                )}
+                                            </React.Fragment>
                                         ))}
+
                                     </div>
                                 </React.Fragment>
                             ))}
                             <div className="offerSummary">
                                 <Title level={5}>
-                                    Total time:{" "}
-                                    {dayjs
-                                        .duration(offer.totalDuration)
-                                        .format("HH[h] mm[m]")}
+                                    Total Time:{" "}
+                                    {dayjs.duration(offer.totalDuration).format("HH[h] mm[m]")}
                                 </Title>
                                 <Title level={4}>
-                                    ${offer.price.total} {offer.price.currency} Total
+                                    Total: ${offer.price.total} {offer.price.currency}
                                 </Title>
+                                <List
+                                    size="small"
+                                    dataSource={offer.travelerPricings}
+                                    renderItem={(price: any) => (
+                                        <List.Item>
+                                            <Text>{price.travelerType} {price.travelerId}: ${price.price.total} {price.price.currency}</Text>
+                                        </List.Item>
+                                    )}
+                                />
                             </div>
+
                         </List.Item>
                     )}
                 />
