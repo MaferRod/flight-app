@@ -4,7 +4,6 @@
 - [Technologies](#technologies)
 - [Features](#features)
 - [Setup Instructions](#setup-instructions)
-- [Running the Application](#running-the-application)
 
 ## Introduction
 The **Search Flight Application** is a full-stack project developed to search flights using Amadeus API.
