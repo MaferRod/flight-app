@@ -36,7 +36,7 @@ const SearchForm: React.FC = () => {
     };
 
     const disabledDate: RangePickerProps["disabledDate"] = (current) => {
-        return current && current < dayjs().endOf("day");
+        return current  && current.isBefore(dayjs(), 'day');
     };
 
     const handleSubmit = async (values: any) => {

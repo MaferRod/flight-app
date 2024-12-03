@@ -49,3 +49,68 @@
     border-radius: 4px; 
 }
 
+/* Diseño de contenido principal */
+.mainContent {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+/* Columna izquierda */
+.leftColumn {
+    padding-right: 16px; /* Espaciado entre las columnas */
+    border-right: 1px solid #e0e0e0; /* Línea divisoria */
+}
+
+/* Barra lateral derecha */
+.priceBreakdown {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    position: sticky; /* Fija la barra lateral al hacer scroll */
+    top: 20px;
+    height: fit-content;
+}
+
+/* Título de sección */
+.sectionTitle {
+    color: #1890ff;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+/* Secciones */
+.priceSection {
+    margin-bottom: 16px;
+}
+
+/* Listas */
+.feesList,
+.travelerPricingList {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0;
+}
+
+.feesList li,
+.travelerPricingList li {
+    background: #ffffff;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Sección de total */
+.totalPriceSection {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: #61aef5;
+    color: white;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+}

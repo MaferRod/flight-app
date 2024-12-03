@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import FlightResultsContext from "../../contexts/FlightResultsContext";
-import { Button, Card, Col, Divider, List, Row, Typography } from "antd";
+import { Card, Col, Divider, List, Row, Typography } from "antd";
 import "./details.css";
 import dayjs from "dayjs";
-import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -13,96 +12,94 @@ const DetailsPage: React.FC = () => {
 
     return (
         <div className="detailsContainer">
+            {/* Encabezado */}
             <Row className="detailsHeader" align="middle">
                 <Col span={24}>
                     <Title>Flight Details</Title>
                 </Col>
             </Row>
-            <Row>
-                <Col span={17}>
+
+            <Row gutter={16}>
+                {/* Columna izquierda: Información del itinerario */}
+                <Col xs={24} md={17} className="itineraryColumn">
                     <List
                         itemLayout="vertical"
                         dataSource={selectedFlight.itineraries}
-                        renderItem={(itinerary: any, itineraryIndex: any) => (
+                        renderItem={(itinerary: any, itineraryIndex: number) => (
                             <List.Item key={itineraryIndex}>
                                 <Title level={3}>
                                     {itineraryIndex === 0 ? "Departure" : "Return"}
                                 </Title>
-                                {itinerary.segments.map((segment: any, segmentIndex: any) => (
+                                {itinerary.segments.map((segment: any, segmentIndex: number) => (
                                     <React.Fragment key={segmentIndex}>
-                                        <Row className="segmentRow">
-                                            <Card className="segmentCard">
-                                                <Row>
-                                                    <Col span={18}>
-                                                        <Title level={4}>Segment</Title>
-                                                        <Row>
-                                                            <Col span={12}>
-                                                                <Text strong>Departure date:</Text>
-                                                                <div>{dayjs(segment.departure.at).format("YYYY-MM-DD")}</div>
-                                                                <Text strong>Departure hour:</Text>
-                                                                <div>{dayjs(segment.departure.at).format("HH:mm")}</div>
-                                                            </Col>
-                                                            <Col span={12}>
-                                                                <Text strong>Arrival date:</Text>
-                                                                <div>{dayjs(segment.arrival.at).format("YYYY-MM-DD")}</div>
-                                                                <Text strong>Arrival hour:</Text>
-                                                                <div>{dayjs(segment.arrival.at).format("HH:mm")}</div>
-                                                            </Col>
-                                                        </Row>
-                                                        <Row>
-                                                            <Col span={12}>
-                                                                <Text strong>Deptarture airport:</Text>{" "}
-                                                                {segment.departure.airportCommonName} ({segment.departure.iataCode})
-                                                            </Col>
-                                                            <Col span={12}>
-                                                                <Text strong>Arr. airport:</Text>{" "}
-                                                                {segment.arrival.airportCommonName} ({segment.arrival.iataCode})
-                                                            </Col>
-                                                        </Row>
-                                                        <Row>
-                                                            <Col span={12}>
-                                                                <Text strong>Carrier:</Text> {segment.airlineCommonName}{" "}
-                                                                {segment.carrierCode}
-                                                            </Col>
-                                                            <Col span={12}>
-                                                                <Text strong>Flight number:</Text> {segment.number}
-                                                            </Col>
-                                                        </Row>
-                                                    </Col>
+                                        <Card className="segmentCard">
+                                            <Row gutter={[16, 16]}>
+                                                {/* Información del segmento */}
+                                                <Col span={18}>
+                                                    <Row>
+                                                        <Col span={12}>
+                                                            <Text strong>Departure Date:</Text>
+                                                            <div>{dayjs(segment.departure.at).format("YYYY-MM-DD")}</div>
+                                                            <Text strong>Departure Hour:</Text>
+                                                            <div>{dayjs(segment.departure.at).format("HH:mm")}</div>
+                                                        </Col>
+                                                        <Col span={12}>
+                                                            <Text strong>Arrival Date:</Text>
+                                                            <div>{dayjs(segment.arrival.at).format("YYYY-MM-DD")}</div>
+                                                            <Text strong>Arrival Hour:</Text>
+                                                            <div>{dayjs(segment.arrival.at).format("HH:mm")}</div>
+                                                        </Col>
+                                                    </Row>
+                                                    <Row>
+                                                        <Col span={12}>
+                                                            <Text strong>Departure Airport:</Text>{" "}
+                                                            {segment.departure.airportCommonName} ({segment.departure.iataCode})
+                                                        </Col>
+                                                        <Col span={12}>
+                                                            <Text strong>Arrival Airport:</Text>{" "}
+                                                            {segment.arrival.airportCommonName} ({segment.arrival.iataCode})
+                                                        </Col>
+                                                    </Row>
+                                                </Col>
+
+                                                {/* Detalles de tarifas */}
+                                                <Col span={6}>
+                                                    <Title level={5}>Traveler Fare Details</Title>
                                                     {traveler.fareDetailsBySegment
-                                                        .filter(
-                                                            (fareDetail: any) => fareDetail.segmentId === segment.id
-                                                        )
-                                                        .map((fareDetail: any, fareIndex: any) => (
-                                                            <Col span={6} key={fareIndex}>
-                                                                <Title level={4}>Travelers fare details</Title>
+                                                        .filter((fareDetail: any) => fareDetail.segmentId === segment.id)
+                                                        .map((fareDetail: any, fareIndex: number) => (
+                                                            <div key={fareIndex}>
                                                                 <Paragraph>Cabin: {fareDetail.cabin}</Paragraph>
                                                                 <Paragraph>Class: {fareDetail.class}</Paragraph>
-                                                                <Paragraph>Ammenities:</Paragraph>
-                                                                {fareDetail.ammenities ? (
-                                                                    <ul>
-                                                                        {fareDetail.ammenities.map(
-                                                                            (ammenitie: any, index: any) => (
-                                                                                <li key={index}>
-                                                                                    {ammenitie.description},{" "}
-                                                                                    {ammenitie.isChargeable
-                                                                                        ? "chargeable"
-                                                                                        : "not chargeable"}
-                                                                                </li>
-                                                                            )
-                                                                        )}
-                                                                    </ul>
-                                                                ) : (
-                                                                    <Paragraph>No ammenities available</Paragraph>
-                                                                )}
-                                                            </Col>
+                                                                <Paragraph>
+                                                                    Amenities:{" "}
+                                                                    {fareDetail.ammenities?.length > 0 ? (
+                                                                        <ul>
+                                                                            {fareDetail.ammenities.map(
+                                                                                (ammenitie: any, index: number) => (
+                                                                                    <li key={index}>
+                                                                                        {ammenitie.description} -{" "}
+                                                                                        {ammenitie.isChargeable
+                                                                                            ? "Chargeable"
+                                                                                            : "Free"}
+                                                                                    </li>
+                                                                                )
+                                                                            )}
+                                                                        </ul>
+                                                                    ) : (
+                                                                        "No amenities available"
+                                                                    )}
+                                                                </Paragraph>
+                                                            </div>
                                                         ))}
-                                                </Row>
-                                            </Card>
-                                        </Row>
+                                                </Col>
+                                            </Row>
+                                        </Card>
+
+                                        {/* Tiempo de escala */}
                                         {segmentIndex < itinerary.segments.length - 1 && (
-                                            <Row>
-                                                <Col span={24} className="layoverInfo">
+                                            <Row className="layoverInfo">
+                                                <Col span={24}>
                                                     <Text strong>Layover Time:</Text>{" "}
                                                     {(() => {
                                                         const currentArrival = dayjs(segment.arrival.at);
@@ -119,37 +116,55 @@ const DetailsPage: React.FC = () => {
                                         )}
                                     </React.Fragment>
                                 ))}
-
                             </List.Item>
                         )}
                     />
                 </Col>
-                <Divider type="vertical" className="verticalDivider" />
-                <Col span={6}>
-                    <Title level={4}>Price Breakdown</Title>
-                    <Paragraph>
-                        Base: $ {selectedFlight.price.base} {selectedFlight.price.currency}
-                    </Paragraph>
-                    <Paragraph>Fees</Paragraph>
-                    <ul>
-                        {selectedFlight.price.fees.map((fee: any, index: any) => (
-                            <li key={index}>
-                                {fee.type}: ${fee.amount} {selectedFlight.price.currency}
-                            </li>
-                        ))}
-                    </ul>
-                    <Paragraph>
-                        Total: $ {selectedFlight.price.total} {selectedFlight.price.currency}
-                    </Paragraph>
-                    <Paragraph>Price per traveler</Paragraph>
-                    <ul>
-                        {selectedFlight.travelerPricings.map((price: any) => (
-                            <li key={price.travelerId}>
-                                {price.travelerType} {price.travelerId}: ${" "}
-                                {price.price.total} {price.price.currency}
-                            </li>
-                        ))}
-                    </ul>
+
+                {/* Columna derecha: Desglose de precios */}
+                <Col xs={24} md={7} className="priceBreakdown">
+                    <div className="priceSection">
+                        <Title level={4}>Base Price</Title>
+                        <Paragraph>
+                            <strong>Base:</strong> $ {selectedFlight.price.base} {selectedFlight.price.currency}
+                        </Paragraph>
+                    </div>
+
+                    <Divider />
+
+                    <div className="priceSection">
+                        <Title level={4}>Price per Traveler</Title>
+                        <ul>
+                            {selectedFlight.travelerPricings.map((price: any) => (
+                                <li key={price.travelerId}>
+                                    {price.travelerType} ({price.travelerId}): $ {price.price.total}{" "}
+                                    {price.price.currency}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <Divider />
+
+                    <div className="priceSection">
+                        <Title level={4}>Fees</Title>
+                        <ul>
+                            {selectedFlight.price.fees.map((fee: any, index: number) => (
+                                <li key={index}>
+                                    {fee.type}: $ {fee.amount} {selectedFlight.price.currency}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <Divider />
+
+                    <div className="totalPriceSection">
+                        <Title level={4}>Total</Title>
+                        <Paragraph>
+                            <strong>Total:</strong> $ {selectedFlight.price.total} {selectedFlight.price.currency}
+                        </Paragraph>
+                    </div>
                 </Col>
             </Row>
         </div>
