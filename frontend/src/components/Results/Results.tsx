@@ -86,12 +86,16 @@ const Results: React.FC = () => {
                                                 <Card className="segmentCard">
                                                     <Row>
                                                         <Col span={12}>
-                                                            <Text strong>Departure:</Text>{" "}
-                                                            {dayjs(segment.departure.at).format("YYYY-MM-DD HH:mm")}
+                                                            <Text strong>Departure date:</Text>{" "}
+                                                            {dayjs(segment.departure.at).format("YYYY-MM-DD")}{" "}
+                                                            <Text strong>Departure hour:</Text>{" "}
+                                                            {dayjs(segment.departure.at).format("HH:mm")}
                                                         </Col>
                                                         <Col span={12}>
-                                                            <Text strong>Arrival:</Text>{" "}
-                                                            {dayjs(segment.arrival.at).format("YYYY-MM-DD HH:mm")}
+                                                            <Text strong>Arrival date:</Text>{" "}
+                                                            {dayjs(segment.arrival.at).format("YYYY-MM-DD")}{" "}
+                                                            <Text strong>Departure hour:</Text>{" "}
+                                                            {dayjs(segment.arrival.at).format("HH:mm")}
                                                         </Col>
                                                     </Row>
                                                     <Row>
@@ -138,23 +142,31 @@ const Results: React.FC = () => {
                                 </React.Fragment>
                             ))}
                             <div className="offerSummary">
-                                <Title level={5}>
-                                    Total Time:{" "}
-                                    {dayjs.duration(offer.totalDuration).format("HH[h] mm[m]")}
-                                </Title>
-                                <Title level={4}>
-                                    Total: ${offer.price.total} {offer.price.currency}
-                                </Title>
+                                <div className="totalInfo">
+                                    <Title level={5} className="totalTime">
+                                        <span>Total Time:</span>{" "}
+                                        {dayjs.duration(offer.totalDuration).format("HH[h] mm[m]")}
+                                    </Title>
+                                    <Title level={4} className="totalPrice">
+                                        <span>Total:</span> ${offer.price.total} {offer.price.currency}
+                                    </Title>
+                                </div>
                                 <List
+                                    className="pricingDetails"
                                     size="small"
+                                    header={<Text strong>Traveler Pricing:</Text>}
                                     dataSource={offer.travelerPricings}
                                     renderItem={(price: any) => (
                                         <List.Item>
-                                            <Text>{price.travelerType} {price.travelerId}: ${price.price.total} {price.price.currency}</Text>
+                                            <Text>
+                                                {price.travelerType} ({price.travelerId}): ${price.price.total}{" "}
+                                                {price.price.currency}
+                                            </Text>
                                         </List.Item>
                                     )}
                                 />
                             </div>
+
 
                         </List.Item>
                     )}
